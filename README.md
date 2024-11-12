@@ -61,17 +61,28 @@ end
 ```elixir
 defmodule Palindrome do
   def largest_palindrome_product do
-    compute_palindromes(999, 999, 0)
+    find_palindrome(999, 999, 0)
   end
 
-  defp compute_palindromes(100, _, max), do: max
-  defp compute_palindromes(a, 100, max), do: compute_palindromes(a - 1, 999, max)
-
-  defp compute_palindromes(a, b, max) do
+  defp find_palindrome(a, b, max) when a >= 100 do
     product = a * b
-    new_max = if palindrome?(product) and product > max, do: product, else: max
-    compute_palindromes(a, b - 1, new_max)
+    new_max = 
+      if palindrome?(product) and product > max do
+        product
+      else
+        max
+      end
+
+    if b > 100 do
+      max_of_rest = find_palindrome(a, b - 1, new_max)
+      max(max_of_rest, new_max)  # Operation after recursion
+    else
+      max_of_rest = find_palindrome(a - 1, 999, new_max)
+      max(max_of_rest, new_max)  # Operation after recursion
+    end
   end
+
+  defp find_palindrome(_, _, max), do: max
 
   defp palindrome?(n) do
     str = Integer.to_string(n)
@@ -81,11 +92,13 @@ end
 ```
 
 **Механизм работы:**
-- Начальная функция запускается с `a = 999` и `b = 999`, также как в хвостовой рекурсии.
-- При каждом вызове рекурсивно перемножаются `a` и `b`, после чего проверяется, является ли произведение палиндромом.
-- Если найдено палиндромное произведение, превышающее `max`, оно становится новым значением `max`.
-- Рекурсия останавливается, когда `a` и `b` уменьшаются до значений менее 100.
-- В отличие от хвостовой рекурсии, обычная рекурсия сохраняет промежуточные вызовы в стеке, что делает её менее оптимальной для больших диапазонов значений.
+- `find_palindrome/3` запускается с `a = 999` и `b = 999`.
+- На каждой итерации вычисляется `product = a * b` и проверяется, является ли это число палиндромом с помощью `palindrome?/1`.
+- Если `product` — палиндром и больше текущего `max`, оно становится новым значением `max`.
+- Переменная `b` уменьшается, пока не достигнет 100. Когда `b = 100`, `a` уменьшается на 1, а `b` снова становится 999.
+- Используется обычная (не хвостовая) рекурсия: после каждого рекурсивного вызова `find_palindrome/3` выполняется операция `max(max_of_rest, new_max)`.
+- Это предотвращает оптимизацию хвостовой рекурсии, сохраняя каждый вызов в стеке и приводя к накоплению промежуточных результатов.
+
 
 #### 3. Модульная реализация с использованием reduce и filter
 
