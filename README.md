@@ -347,7 +347,7 @@ IO.puts("Product of coefficients a and b that produce the maximum number of prim
 
 
 #### 2. Монолитная реализация с обычной рекурсией
-'''elixir
+```elixir
 defmodule QuadraticPrimes do
   # Monolithic function to find the product of coefficients for the best prime-generating formula
   def find_best_coefficients do
@@ -394,7 +394,7 @@ end
 # Running the function to get the product of best coefficients
 result = QuadraticPrimes.find_best_coefficients()
 IO.puts("Product of coefficients a and b that produce the maximum number of primes: #{result}")
-'''
+```
 
 **Механизм работы:**
 
@@ -418,7 +418,7 @@ IO.puts("Product of coefficients a and b that produce the maximum number of prim
 
 #### 3. Модульная реализация с использованием reduce и filter + работа с бесконечными списками
 
-'''elixir
+```elixir
 defmodule QuadraticPrimes do
   # Проверка, является ли число простым
   def is_prime(n) when n <= 1, do: false
@@ -459,7 +459,7 @@ end
 # Running the function to get the product of best coefficients
 result = QuadraticPrimes.find_best_coefficients()
 IO.puts("Product of coefficients a and b that produce the maximum number of primes: #{result}")
-'''
+```
 
 **Механизм работы:**
 
@@ -485,7 +485,7 @@ IO.puts("Product of coefficients a and b that produce the maximum number of prim
 
 #### 4. Использование отображения (map) для генерации последовательности + работа со спец. синтаксисом для циклов
 
-'''elixir
+```elixir
 defmodule QuadraticPrimes do
   # Проверка простоты числа
   def is_prime(n) when n <= 1, do: false
@@ -527,7 +527,7 @@ end
 # Running the function to get the product of best coefficients
 result = QuadraticPrimes.find_best_coefficients()
 IO.puts("Product of coefficients a and b that produce the maximum number of primes: #{result}")
-'''
+```
 
 **Механизм работы:**
 
@@ -553,7 +553,7 @@ IO.puts("Product of coefficients a and b that produce the maximum number of prim
 
 #### 6.реализация на традиционном языке программирования python
 
-'''python
+```python
 import math
 from itertools import count
 
@@ -598,7 +598,7 @@ def find_best_coefficients():
     
 if __name__ == '__main__':
     print(find_best_coefficients())
-''''
+```
 **Механизм работы:**
 
 - Python-реализация следует схожему подходу с разделением функций для генерации последовательности, фильтрации простых чисел и поиска лучших коэффициентов.
