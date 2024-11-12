@@ -104,14 +104,29 @@ end
 
 ```elixir
 defmodule Palindrome do
+  # Main function that coordinates the modular solution
   def largest_palindrome_product do
-    for a <- 100..999, b <- 100..999, into: [] do
-      a * b
-    end
-    |> Enum.filter(&palindrome?/1)
-    |> Enum.max()
+    generate_products()
+    |> filter_palindromes()
+    |> find_max()
   end
 
+  # 1. Generation of the sequence of products using Enum.map/2 and a comprehension
+  defp generate_products do
+    for a <- 100..999, b <- 100..999, do: a * b
+  end
+
+  # 2. Filtering to keep only palindromic numbers using Enum.filter/2
+  defp filter_palindromes(products) do
+    Enum.filter(products, &palindrome?/1)
+  end
+
+  # 3. Finding the maximum palindrome using Enum.reduce/3
+  defp find_max(palindromes) do
+    Enum.reduce(palindromes, 0, &max/2)
+  end
+
+  # Helper function to check if a number is a palindrome
   defp palindrome?(n) do
     str = Integer.to_string(n)
     str == String.reverse(str)
@@ -120,11 +135,11 @@ end
 ```
 
 **Механизм работы:**
-- Генерируется список всех произведений для чисел `a` и `b` от 100 до 999.
-- Сначала создается список всех произведений с помощью `for`, который является встроенным средством для генерации последовательностей.
-- Далее с помощью `Enum.filter` отфильтровываются только палиндромные числа.
-- `Enum.max` находит наибольший элемент среди отфильтрованных палиндромов.
-- Такая реализация легко читается, поскольку этапы генерации, фильтрации и нахождения максимума разделены, но требует значительного объема памяти для хранения всех произведений.
+- Модуль `Palindrome` состоит из трёх функций, которые последовательно выполняют генерацию последовательности, фильтрацию и свёртку.
+- `generate_products/0` создает список всех возможных произведений двух 3-значных чисел (от 100 до 999) с использованием списочного включения (`for a <- 100..999, b <- 100..999, do: a * b`).
+- `filter_palindromes/1` принимает список произведений и фильтрует его, оставляя только палиндромы. Для этого используется `Enum.filter/2` и вспомогательная функция `palindrome?/1`, которая проверяет, является ли число палиндромом.
+- `find_max/1` принимает отфильтрованный список палиндромов и находит максимальное значение с помощью `Enum.reduce/3`, где функция `&max/2` используется для сравнения элементов, а начальное значение аккумулятора — `0`.
+- Данная реализация модульная и разделяет генерацию последовательности, фильтрацию и свёртку, что делает код более читаемым и легким для поддержки.
 
 
 #### 4. Использование отображения (map) для генерации последовательности
