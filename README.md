@@ -147,14 +147,30 @@ end
 ```elixir
 defmodule Palindrome do
   def largest_palindrome_product do
-    Enum.map(100..999, fn a ->
-      Enum.map(100..999, fn b -> a * b end)
-    end)
-    |> List.flatten()
-    |> Enum.filter(&palindrome?/1)
-    |> Enum.max()
+    generate_products()
+    |> filter_palindromes()
+    |> find_max()
   end
 
+  # 1. Generation of the sequence of products using Enum.map/2 to create pairs of products
+  defp generate_products do
+    100..999
+    |> Enum.flat_map(fn a ->
+      Enum.map(100..999, fn b -> a * b end)
+    end)
+  end
+
+  # 2. Filtering to keep only palindromic numbers using Enum.filter/2
+  defp filter_palindromes(products) do
+    Enum.filter(products, &palindrome?/1)
+  end
+
+  # 3. Finding the maximum palindrome using Enum.reduce/3
+  defp find_max(palindromes) do
+    Enum.reduce(palindromes, 0, &max/2)
+  end
+
+  # Helper function to check if a number is a palindrome
   defp palindrome?(n) do
     str = Integer.to_string(n)
     str == String.reverse(str)
@@ -163,9 +179,14 @@ end
 ```
 
 **Механизм работы:**
-- Используется `Enum.map` для создания списка всех произведений чисел от 100 до 999.
-- Каждый результат `Enum.map` для `b` вложен в ещё один `Enum.map` по `a`, после чего результат объединяется в один список с помощью `List.flatten`.
-- Как и в предыдущей реализации, отфильтровываются только палиндромы, после чего выбирается наибольший.
-- Эта реализация наглядно показывает работу `map` для построения сложной последовательности, но менее оптимальна из-за создания вложенных списков.
+
+- Модуль `Palindrome` состоит из трёх функций, которые выполняют генерацию последовательности, фильтрацию и свёртку.
+- `generate_products/0` создает список всех возможных произведений двух 3-значных чисел (от 100 до 999) с помощью функции отображения (`Enum.map/2`). 
+  - Сначала создаётся диапазон чисел `100..999`, и для каждого числа `a` в этом диапазоне применяется `Enum.flat_map`, где происходит вложенное отображение (`Enum.map`) для всех `b` в диапазоне `100..999`.
+  - Для каждой пары чисел `a` и `b` вычисляется произведение `a * b`, и результат добавляется в плоский список всех произведений.
+- `filter_palindromes/1` принимает список произведений и фильтрует его, оставляя только палиндромы. Для этого используется `Enum.filter/2` и вспомогательная функция `palindrome?/1`, которая проверяет, является ли число палиндромом.
+- `find_max/1` принимает отфильтрованный список палиндромов и находит максимальное значение с помощью `Enum.reduce/3`, где функция `&max/2` используется для сравнения элементов, а начальное значение аккумулятора — `0`.
+- Данная реализация использует функцию отображения (map) для генерации последовательности произведений и сохраняет модульную структуру для разделения задач генерации, фильтрации и свёртки.
+
 
 ---
